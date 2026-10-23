@@ -1,0 +1,13 @@
+Datenschutz-URL in App Store Connect:
+https://edzartsinning-ui.github.io/samplepilot/privacy.html
+
+Support-URL:
+https://edzartsinning-ui.github.io/samplepilot/support.html
+
+Die Datenschutzerklärung beschreibt lokale Audioverarbeitung, Berechtigungen, StoreKit, Testphase, Schlüsselbund, Aufbewahrung, Löschung, Support und Website-Hosting getrennt. Sie enthält kein Versprechen einer Apple-Freigabe.
+
+App-Datenschutzlabel: Nur lokal verarbeitete Daten gelten nach Apples Definition nicht als erhoben. Für den geprüften Quellstand ist keine automatische Übermittlung von Audio-/Gerätedaten an den Entwickler vorhanden. Freiwillige Supportanfragen sind gesondert anhand der Kriterien von Apple zu prüfen. Nicht pauschal allein aufgrund dieses Textes „Keine Daten erfasst“ auswählen; den finalen Build und alle eingebundenen SDKs abgleichen. Apples eigene Datenerhebung ist nach Apples Anleitung nicht als eigene Datenerhebung anzugeben.
+
+Quellen:
+https://developer.apple.com/app-store/app-privacy-details/
+https://developer.apple.com/app-store/review/guidelines/#privacy

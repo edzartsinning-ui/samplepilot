@@ -1,0 +1,7 @@
+Die vier HTML-Dateien und assets direkt in das Repository samplepilot hochladen und vorhandene Dateien ersetzen. Dateinamen bleiben unverändert; App-Links bleiben gültig.
+
+Impressum und Datenschutz sind Deutsch; Startseite und technische Hilfe bleiben Englisch.
+
+Vor Veröffentlichung prüfen: Anschrift/E-Mail korrekt? Falls inzwischen eine USt-IdNr. oder Wirtschafts-IdNr. erteilt wurde, im Impressum ergänzen. Es wurde keine unbekannte Nummer erfunden.
+Die App-Beschreibung basiert auf SamplePilot(1).zip. Bei Änderungen an Testphase/Schlüsselbund/Datenverarbeitung Datenschutzerklärung abgleichen.
+GitHubs genaue Protokollfristen und die vertragliche Datenschutzgestaltung des Hosting-Kontos sind nicht unabhängig bestätigt. Der Text ersetzt keine verbindliche rechtliche Prüfung.
