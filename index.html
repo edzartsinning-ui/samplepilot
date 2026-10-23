@@ -1,5 +1,811 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Know your audio output — SamplePilot</title><meta name="description" content="A focused macOS utility for background audio activity detection, source metadata and supported output-format switching."><link rel="icon" href="assets/samplepilot-64.png"><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#content">Skip to content</a><header><a class="brand" href="index.html"><img src="assets/samplepilot-128.png" alt="">SamplePilot</a><nav aria-label="Main navigation"><a href="index.html">Overview</a><a href="support.html">Support</a><a href="privacy.html">Datenschutz</a></nav></header><main id="content"><section class="hero"><div><span class="pill">Made for macOS 26 and later</span><h1>Your music.<br>Your output.</h1><p class="lead">See your Mac’s output format. Match supported sample rates with clear control over what changes.</p><p>SamplePilot lives in the menu bar and checks audio activity in the background.</p><a class="button" href="support.html">Explore how it works</a></div><img src="assets/samplepilot-1024.png" alt="SamplePilot audio interface app icon" width="350" height="350"></section>
-<section><h2>Listen with a clearer view.</h2><div class="grid"><article class="card"><h3>Background awareness</h3><p>Inspect active audio processes and the default output device without recording audio.</p></article><article class="card"><h3>Careful switching</h3><p>Check supported sample rates, confirm the actual device format and attempt a restore if a change fails.</p></article><article class="card"><h3>More than one workflow</h3><p>Use optional Apple Music metadata, a selected audio file, or a manual output rate for playback in other apps.</p></article></div></section>
-<section><h2>Know what can be detected.</h2><p class="note">Automatic track-format detection currently uses Apple Music metadata. Detecting an audio process does not reveal its track’s original sample rate or bit depth. Universal automatic detection for Spotify, browsers and other players is not implemented. Reference modes work with any player using the default macOS output, but do not follow track changes.</p><p>Streaming metadata is unverified. Automatic switching, background Apple Music metadata and stream metadata are enabled by default on a fresh installation; you can disable each option in Settings. macOS may ask you to allow Music automation. DAC output depth and original source depth are shown separately. Bit-perfect playback is not guaranteed.</p></section><section><h2>14 days to try every feature.</h2><p>Download the app for free and start the <strong>14-day Trial</strong> in SamplePilot. Automatic switching, manual output controls and write diagnostics are included for 14 full days from activation.</p><p>After the trial, audio activity, output routes, formats and read-only diagnostics remain available. A separate one-time in-app purchase permanently unlocks audio changes. The current price is shown in the app before purchase.</p><p><strong>No subscription. No automatic charge when the trial ends.</strong> Restore Purchases is available in the app.</p></section><section><h2>Independent. Local. Focused.</h2><p>Developed by Edzart Sinning. SamplePilot contains no advertising, analytics or audio recording. Device and source information stays on your Mac unless you choose to share it with support.</p><a href="privacy.html">Datenschutzerklärung lesen</a></section></main><footer>© 2026 Edzart Sinning · SamplePilot<nav aria-label="Rechtliches und Support"><a href="support.html">Support</a><a href="privacy.html">Datenschutz</a><a href="imprint.html">Impressum</a></nav></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>SamplePilot – Hi-Res Audio Output Control for Mac</title>
+
+  <meta name="description"
+        content="SamplePilot helps audiophile Mac users monitor DAC output formats, manage supported sample rates and use Apple Music metadata for automatic switching. Free 14-day trial.">
+
+  <meta name="theme-color" content="#080e1b">
+
+  <link rel="canonical"
+        href="https://edzartsinning-ui.github.io/samplepilot/">
+
+  <link rel="icon"
+        type="image/png"
+        href="assets/samplepilot-64.png">
+
+  <link rel="apple-touch-icon"
+        href="assets/samplepilot-256.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title"
+        content="SamplePilot – Hi-Res Audio. Know Your Output.">
+  <meta property="og:description"
+        content="Take control of your Mac's audio output. Monitor DAC formats, manage supported sample rates and enjoy a clearer Hi-Res listening setup.">
+  <meta property="og:url"
+        content="https://edzartsinning-ui.github.io/samplepilot/">
+  <meta property="og:image"
+        content="https://edzartsinning-ui.github.io/samplepilot/assets/SamplePilot_AppStore_01_2560x1600_FINAL(1).png">
+
+  <style>
+    :root {
+      --bg: #080e1b;
+      --surface: #111c30;
+      --surface2: #17253b;
+      --text: #f5f8ff;
+      --muted: #aebbd0;
+      --cyan: #50e7ef;
+      --blue: #438dff;
+      --border: rgba(255,255,255,.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 44px));
+      margin: auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8,14,27,.93);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-size: 21px;
+      font-weight: 700;
+    }
+
+    .brand img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      border-radius: 12px;
+      clip-path: inset(2px round 12px);
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--cyan);
+    }
+
+    .hero {
+      padding: 100px 0 75px;
+      background:
+        radial-gradient(
+          ellipse at 80% 15%,
+          rgba(35,113,255,.25),
+          transparent 55%
+        ),
+        radial-gradient(
+          ellipse at 10% 70%,
+          rgba(30,205,225,.12),
+          transparent 50%
+        );
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(42px, 5vw, 72px);
+      line-height: 1.08;
+      letter-spacing: -2px;
+      margin: 20px 0 25px;
+    }
+
+    h1 span,
+    .accent {
+      background: linear-gradient(
+        90deg,
+        #43a5ff,
+        #58eff0
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: 19px;
+      max-width: 570px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 650;
+      background: linear-gradient(
+        110deg,
+        #2379f8,
+        #3cdbe4
+      );
+      color: #061222;
+      transition: transform .2s, opacity .2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      opacity: .9;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .hero-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 22px;
+      box-shadow: 0 25px 75px rgba(0,0,0,.45);
+    }
+
+    section {
+      padding: 85px 0;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.2;
+      letter-spacing: -1px;
+      margin: 12px 0 18px;
+    }
+
+    .section-intro {
+      max-width: 740px;
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 35px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: linear-gradient(
+        150deg,
+        var(--surface2),
+        var(--surface)
+      );
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 21px;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .showcase {
+      background: #0c1526;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+      gap: 55px;
+    }
+
+    .showcase img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .feature-list {
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .feature-list li {
+      padding: 7px 0;
+    }
+
+    .highlight {
+      background: linear-gradient(
+        120deg,
+        rgba(32,100,230,.18),
+        rgba(30,220,225,.08)
+      );
+      border: 1px solid rgba(80,220,240,.2);
+      border-radius: 24px;
+      padding: 50px;
+      text-align: center;
+    }
+
+    .highlight h2 {
+      font-size: clamp(30px, 4vw, 48px);
+      margin: 12px 0;
+    }
+
+    .highlight p {
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto 25px;
+    }
+
+    .note {
+      background: rgba(255,255,255,.035);
+      border-left: 3px solid var(--cyan);
+      padding: 22px 26px;
+      border-radius: 8px;
+      color: var(--muted);
+    }
+
+    .note strong {
+      color: white;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 35px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--cyan);
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid,
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 65px;
+      }
+
+      .hero-image {
+        max-width: 650px;
+      }
+
+      .highlight {
+        padding: 30px 20px;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        gap: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container nav">
+
+    <a class="brand" href="index.html">
+      <img
+        src="assets/samplepilot-128.png"
+        alt="SamplePilot icon">
+      SamplePilot
+    </a>
+
+    <nav aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#control">Audio Control</a>
+      <a href="#trial">Free Trial</a>
+      <a href="support.html">Support</a>
+    </nav>
+
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+
+  <section class="hero">
+    <div class="container hero-grid">
+
+      <div>
+        <div class="eyebrow">
+          Designed for audiophile listening
+        </div>
+
+        <h1>
+          Hi-Res Audio.<br>
+          <span>Know your output.</span>
+        </h1>
+
+        <p class="lead">
+          Take control of your Mac's audio output.
+          Monitor your DAC, manage supported sample
+          rates and bring clarity to your Hi-Res
+          listening experience.
+        </p>
+
+        <p>
+          SamplePilot works quietly from your macOS
+          menu bar, keeping your audio output
+          information within easy reach.
+        </p>
+
+        <div class="buttons">
+
+          <a class="button" href="#trial">
+            Try SamplePilot Free
+          </a>
+
+          <a class="button secondary" href="#features">
+            Explore Features
+          </a>
+
+        </div>
+
+        <p style="color:#91a3ba;font-size:13px;margin-top:25px">
+          macOS 26+ · 14-day trial · One-time purchase
+        </p>
+      </div>
+
+      <div>
+        <img
+          class="hero-image"
+          src="assets/SamplePilot_AppStore_01_2560x1600_FINAL(1).png"
+          alt="SamplePilot showing Hi-Res DAC output information"
+          width="2560"
+          height="1600">
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- FEATURES -->
+
+  <section id="features">
+    <div class="container">
+
+      <div class="eyebrow">
+        Built for your listening setup
+      </div>
+
+      <h2 class="section-title">
+        Your music deserves<br>
+        <span class="accent">
+          better output control.
+        </span>
+      </h2>
+
+      <p class="section-intro">
+        Whether you use an external USB DAC,
+        built-in speakers or another macOS audio
+        output, SamplePilot helps you understand
+        the format your Mac is actually using.
+      </p>
+
+      <div class="features">
+
+        <article class="card">
+          <div class="card-icon">🎚️</div>
+          <h3>Live DAC Information</h3>
+          <p>
+            View the current output device,
+            sample rate and available physical
+            output-format information.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🎵</div>
+          <h3>Apple Music Integration</h3>
+          <p>
+            Use available Apple Music metadata
+            to support automatic switching
+            between compatible output rates.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">⚙️</div>
+          <h3>Manual Audio Control</h3>
+          <p>
+            Select supported sample rates
+            yourself and verify the resulting
+            device format.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🔊</div>
+          <h3>Multiple Output Routes</h3>
+          <p>
+            Inspect available audio output
+            information for built-in devices,
+            external DACs and other supported
+            macOS output routes.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Core Audio Diagnostics</h3>
+          <p>
+            Examine supported formats and
+            investigate output configuration
+            with integrated diagnostic tools.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">🔒</div>
+          <h3>Privacy by Design</h3>
+          <p>
+            Audio and device information
+            is processed locally.
+            No audio recording, advertising
+            or analytics.
+          </p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SHOWCASE -->
+
+  <section class="showcase" id="control">
+    <div class="container showcase-grid">
+
+      <div>
+        <img
+          src="assets/SamplePilot_02_AppStore_2560x1600(1).png"
+          alt="SamplePilot settings and automatic sample-rate switching"
+          width="2560"
+          height="1600"
+          loading="lazy">
+      </div>
+
+      <div>
+
+        <div class="eyebrow">
+          Precision meets simplicity
+        </div>
+
+        <h2 class="section-title">
+          Your Hi-Res setup.<br>
+          <span class="accent">
+            Your control.
+          </span>
+        </h2>
+
+        <p class="section-intro">
+          SamplePilot gives you control over
+          supported audio output formats without
+          turning everyday listening into a
+          complicated technical process.
+        </p>
+
+        <ul class="feature-list">
+
+          <li>
+            Automatic switching using available
+            Apple Music metadata
+          </li>
+
+          <li>
+            Manual selection of supported
+            output sample rates
+          </li>
+
+          <li>
+            Separate information about
+            source metadata and DAC output
+          </li>
+
+          <li>
+            Verification of the selected
+            output format
+          </li>
+
+          <li>
+            Optional launch at login
+          </li>
+
+          <li>
+            Convenient macOS menu bar access
+          </li>
+
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- AUDIO QUALITY -->
+
+  <section>
+    <div class="container">
+
+      <div class="eyebrow">
+        Understand your audio
+      </div>
+
+      <h2 class="section-title">
+        44.1 kHz. 96 kHz. 192 kHz.<br>
+        <span class="accent">
+          See what your DAC uses.
+        </span>
+      </h2>
+
+      <p class="section-intro">
+        A Hi-Res music file and the actual
+        output format of your Mac are not
+        necessarily the same thing.
+      </p>
+
+      <div class="note">
+
+        <strong>Important distinction:</strong>
+
+        SamplePilot displays and manages supported
+        audio output formats. The DAC's configured
+        sample rate does not prove the original
+        quality of the music source.
+
+        <br><br>
+
+        Automatic track-format switching currently
+        relies on available Apple Music metadata.
+        Streaming metadata is not independently
+        verified.
+
+        Other music players can use manually
+        selected output rates, but universal
+        automatic track-format detection is
+        not available.
+
+        <br><br>
+
+        Bit-perfect playback cannot be guaranteed.
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- FREE TRIAL -->
+
+  <section id="trial">
+    <div class="container">
+
+      <div class="highlight">
+
+        <div class="eyebrow">
+          Discover SamplePilot
+        </div>
+
+        <h2>
+          Experience better<br>
+          <span class="accent">
+            audio output control.
+          </span>
+        </h2>
+
+        <p>
+          Try every SamplePilot feature free
+          for 14 days.
+
+          Explore automatic switching,
+          manual output control and
+          integrated Core Audio diagnostics.
+        </p>
+
+        <p>
+          After the trial, monitoring and
+          read-only information remain available.
+
+          A single in-app purchase permanently
+          unlocks audio changes.
+        </p>
+
+        <div class="buttons"
+             style="justify-content:center">
+
+          <a class="button"
+             href="support.html">
+            Learn How to Start Your Trial
+          </a>
+
+        </div>
+
+        <p style="font-size:14px;margin-top:25px">
+          No subscription. No automatic charge.
+          No advertising.
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- DEVELOPER -->
+
+  <section>
+    <div class="container">
+
+      <div class="eyebrow">
+        Independent Mac software
+      </div>
+
+      <h2 class="section-title">
+        Made for people<br>
+        <span class="accent">
+          who care about sound.
+        </span>
+      </h2>
+
+      <p class="section-intro">
+        SamplePilot is an independently developed
+        macOS utility focused on practical audio
+        output control, transparent information
+        and straightforward operation.
+      </p>
+
+      <p style="color:var(--muted)">
+        Developed by Edzart Sinning.
+        No subscription, no advertising
+        and no unnecessary cloud services.
+      </p>
+
+    </div>
+  </section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="container footer-grid">
+
+    <div>
+      © 2026 Edzart Sinning · SamplePilot
+    </div>
+
+    <div class="footer-links">
+      <a href="support.html">Support</a>
+      <a href="privacy.html">Datenschutz</a>
+      <a href="imprint.html">Impressum</a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
